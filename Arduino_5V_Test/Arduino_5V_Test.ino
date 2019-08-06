@@ -1,14 +1,26 @@
+int buttonIsClicked = 0;
+
 void setup() {
   // put your setup code here, to run once:
   int switchState = 0;
-  pinMode(10,OUTPUT); //10 is the pin controlling the relay.
+  for (int i = 2; i<=7; i++){ //inputs 2-7 are inputs.
+    pinMode(i,INPUT);
+  }
 
+  for (int i = 8; i<=13; i++){ //8-13 are now outputs
+    pinMode(i,OUTPUT);
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(10,HIGH); //Turns on the relay for 10 seconds
-  delay(10000);
-  digitalWrite(10,LOW); //Prooves the resistor by turning it off every 1.5 seconds.
-  delay(1500);
+  buttonIsClicked = digitalRead(7);
+  digitalWrite(10,HIGH);
+  if(buttonIsClicked == HIGH){
+    digitalWrite(8,HIGH); //Turns relay on
+    delay(1000); 
+    digitalWrite(8,LOW); //Turns the relay off.
+  }
+
+
 }
