@@ -5,6 +5,7 @@
 
 const int receiver = 7;
 int play_pause = 0;
+int time_delay = 0;
 
 // declare objects
 IRrecv irrecv(receiver); //Creat an instance of 'irrecv'
@@ -14,7 +15,10 @@ void translateIR() {
   // decribing remote IR codes
 
   switch(results.value) {
-    case 0xFFA25D: Serial.println("POWER"); break;
+    case 0xFFA25D:
+      Serial.println("POWER");
+      digitalWrite(8,LOW);
+      break;
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
     case 0xFF22DD: Serial.println("Fast Back"); break;
@@ -24,7 +28,7 @@ void translateIR() {
         play_pause = 1;
         digitalWrite(8,HIGH);
       }
-      elseif (play_pause == 1) {
+      else if (play_pause == 1) {
         play_pause = 0;
         digitalWrite(8,LOW);
       }
@@ -37,7 +41,11 @@ void translateIR() {
     case 0xFFB04F: Serial.println("ST/REPT"); break;
     // Start Numbers and Digits
     case 0xFF6897: Serial.println("0"); break;
-    case 0xFF30CF: Serial.println("1"); break;
+    case 0xFF30CF:
+      Serial.println("1 - 10 seconds");
+      digitalWrite(8,HIGH);
+      time_delay = 10 * 100;
+      break;
     case 0xFF18E7: Serial.println("2"); break;
     case 0xFF7A85: Serial.println("3"); break;
     case 0xFF10EF: Serial.println("4"); break;
@@ -71,6 +79,10 @@ void loop() {
   if (irrecv.decode(&results)) //Have we received an IR signal?
   {
     translateIR();
+    if (time_delay > 0) {
+      delay(time_delay);
+      time_delay = 0;
+    }
     irrecv.resume(); //Receive the next value
   }
 
