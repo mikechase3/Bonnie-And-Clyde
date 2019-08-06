@@ -49,7 +49,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("IR Receiver Button Decode");
   irrecv.enableIRIn(); //Start the receiver.
-
+  
 }
 
 void loop() {
