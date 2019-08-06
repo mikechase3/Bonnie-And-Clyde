@@ -4,6 +4,7 @@
 #include <ir_Lego_PF_BitStreamEncoder.h>
 
 const int receiver = 7;
+int play_pause = 0;
 
 // declare objects
 IRrecv irrecv(receiver); //Creat an instance of 'irrecv'
@@ -17,7 +18,17 @@ void translateIR() {
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
     case 0xFF22DD: Serial.println("Fast Back"); break;
-    case 0xFF02FD: Serial.println("PAUSE"); break;
+    case 0xFF02FD:
+      Serial.println("PAUSE/PLAY");
+      if (play_pause == 0) {
+        play_pause = 1;
+        digitalWrite(8,HIGH);
+      }
+      elseif (play_pause == 1) {
+        play_pause = 0;
+        digitalWrite(8,LOW);
+      }
+      break;
     case 0xFFC23D: Serial.println("FAST FORWARD"); break;
     case 0xFFE01F: Serial.println("DOWN"); break;
     case 0xFFA857: Serial.println("VOL -"); break;
@@ -35,7 +46,7 @@ void translateIR() {
     case 0xFF42BD: Serial.println("7"); break;
     case 0xFF4AB5: Serial.println("8"); break;
     case 0xFF52AD: Serial.println("9"); break;
-    
+
     case 0xFFFFFFFF: Serial.println(" REPEAT"); break; //Repeats the same digit.
 
     default:
@@ -49,7 +60,10 @@ void setup() {
   Serial.begin(9600);
   Serial.println("IR Receiver Button Decode");
   irrecv.enableIRIn(); //Start the receiver.
-  
+  pinMode(8,OUTPUT);
+  pinMode(10,OUTPUT);
+  digitalWrite(10,HIGH);
+
 }
 
 void loop() {
@@ -58,7 +72,6 @@ void loop() {
   {
     translateIR();
     irrecv.resume(); //Receive the next value
-    
   }
 
 }
