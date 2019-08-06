@@ -17,7 +17,7 @@ void translateIR() {
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
     case 0xFF22DD: Serial.println("Fast Back"); break;
-    case 0xFF02FD: Serial.println("PAUSE"); break;
+    case 0xFF02FD: Serial.println("PAUSE/PLAY"); break;
     case 0xFFC23D: Serial.println("FAST FORWARD"); break;
     case 0xFFE01F: Serial.println("DOWN"); break;
     case 0xFFA857: Serial.println("VOL -"); break;
@@ -60,7 +60,6 @@ void loop() {
   {
     translateIR();
     irrecv.resume(); //Receive the next value
-    
   }
 
 }
