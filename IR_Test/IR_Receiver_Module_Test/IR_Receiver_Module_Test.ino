@@ -5,7 +5,6 @@
 
 const int receiver = 7;
 int play_pause = 0;
-int time_delay = 0;
 
 // declare objects
 IRrecv irrecv(receiver); //Creat an instance of 'irrecv'
@@ -44,7 +43,7 @@ void translateIR() {
     case 0xFF30CF:
       Serial.println("1 - 10 seconds");
       digitalWrite(8,HIGH);
-      time_delay = 10 * 100;
+      delay(10000);
       break;
     case 0xFF18E7: Serial.println("2"); break;
     case 0xFF7A85: Serial.println("3"); break;
@@ -79,10 +78,6 @@ void loop() {
   if (irrecv.decode(&results)) //Have we received an IR signal?
   {
     translateIR();
-    if (time_delay > 0) {
-      delay(time_delay);
-      time_delay = 0;
-    }
     irrecv.resume(); //Receive the next value
   }
 
