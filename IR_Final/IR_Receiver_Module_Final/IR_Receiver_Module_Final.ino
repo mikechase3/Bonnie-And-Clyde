@@ -130,7 +130,6 @@ void setup() {
   pinMode(8,OUTPUT);
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-
 }
 
 void loop() {
