@@ -40,7 +40,11 @@ void translateIR() {
     case 0xFFB04F: Serial.println("ST/REPT"); break;
     // Start Numbers and Digits
     case 0xFF6897: Serial.println("0"); break;
-    case 0xFF30CF: Serial.println("1"); break;
+    case 0xFF30CF:
+      Serial.println("1 - 10 seconds");
+      digitalWrite(8,HIGH);
+      delay(10000);
+      break;
     case 0xFF18E7: Serial.println("2"); break;
     case 0xFF7A85: Serial.println("3"); break;
     case 0xFF10EF: Serial.println("4"); break;
