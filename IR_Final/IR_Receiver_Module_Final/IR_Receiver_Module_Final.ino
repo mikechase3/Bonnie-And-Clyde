@@ -5,10 +5,11 @@
 
 const int receiver = 7;
 int play_pause = 0;
-int time_left = 0;
+double time_left = 0.0;
+bool isPreset = false;
 
 // declare objects
-IRrecv irrecv(receiver); //Creat an instance of 'irrecv'
+IRrecv irrecv(receiver); //Create an instance of 'irrecv'
 decode_results results; //Create instance of 'decode_results'
 
 void translateIR() {
@@ -18,19 +19,27 @@ void translateIR() {
     case 0xFFA25D:
       Serial.println("POWER");
       digitalWrite(8,LOW);
+      isPreset = false;
+      time_left = 0;
+      play_pause = 0;
       break;
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
     case 0xFF22DD: Serial.println("Fast Back"); break;
     case 0xFF02FD:
-      Serial.println("PAUSE/PLAY");
-      if (play_pause == 0) {
-        play_pause = 1;
-        digitalWrite(8,HIGH);
+      if (!isPreset) {
+        Serial.println("PAUSE/PLAY");
+        if (play_pause == 0) {
+          play_pause = 1;
+          digitalWrite(8,HIGH);
+        }
+        else if (play_pause == 1) {
+          play_pause = 0;
+          digitalWrite(8,LOW);
+        }
       }
-      else if (play_pause == 1) {
-        play_pause = 0;
-        digitalWrite(8,LOW);
+      else {
+        Serial.println("PRESET ON - PRESS POWER");
       }
       break;
     case 0xFFC23D: Serial.println("FAST FORWARD"); break;
@@ -44,16 +53,66 @@ void translateIR() {
     case 0xFF30CF:
       Serial.println("1 - 10 seconds");
       digitalWrite(8,HIGH);
-
+      isPreset = true;
+      play_pause = 0;
+      time_left = 10;
       break;
-    case 0xFF18E7: Serial.println("2"); break;
-    case 0xFF7A85: Serial.println("3"); break;
-    case 0xFF10EF: Serial.println("4"); break;
-    case 0xFF38C7: Serial.println("5"); break;
-    case 0xFF5AA5: Serial.println("6"); break;
-    case 0xFF42BD: Serial.println("7"); break;
-    case 0xFF4AB5: Serial.println("8"); break;
-    case 0xFF52AD: Serial.println("9"); break;
+    case 0xFF18E7:
+      Serial.println("2 - 60 seconds - 1 minute");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 60;
+      break;
+    case 0xFF7A85:
+      Serial.println("3 - 120 seconds - 2 minutes");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 120;
+      break;
+    case 0xFF10EF:
+      Serial.println("4 - 300 seconds - 5 minutes");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 300;
+      break;
+    case 0xFF38C7:
+      Serial.println("5 - 900 seconds - 15 minutes");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 900;
+      break;
+    case 0xFF5AA5:
+      Serial.println("6 - 1800 seconds - 30 minutes");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 1800;
+      break;
+    case 0xFF42BD:
+      Serial.println("7 - 3600 seconds - 60 minutes - 1 hour");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 3600;
+      break;
+    case 0xFF4AB5:
+      Serial.println("8 - 7200 seconds - 120 minutes - 2 hours");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 7200;
+      break;
+    case 0xFF52AD:
+      Serial.println("9 - 86400 seconds - 720 minutes - 12 hours");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 86400;
+      break;
 
     case 0xFFFFFFFF: Serial.println(" REPEAT"); break; //Repeats the same digit.
 
@@ -81,5 +140,15 @@ void loop() {
     translateIR();
     irrecv.resume(); //Receive the next value
   }
-
+  if (isPreset) {
+    if (time_left == 0.0) {
+      digitalWrite(8,LOW);
+      isPreset = false;
+    }
+    else {
+      time_left = time_left - 0.5;
+      Serial.println(time_left);
+      delay(500);
+    }
+  }
 }
