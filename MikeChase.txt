@@ -1,8 +1,0 @@
-This is a test of my own branch bitches.
-<<<<<<< HEAD
-=======
-So I'm changing things and want to do this again. But I can't. Why?
-Hi Again.
-Bitchin'
-
->>>>>>> 6485ba105832e0ad21c0b5770dcb57a1f98d06e6
