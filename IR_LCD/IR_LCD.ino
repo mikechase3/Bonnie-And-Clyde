@@ -12,9 +12,7 @@ const int receiver = 7;
 int play_pause = 0;
 
 //Defines the Strings
-char topHalfLCD[] = "Mike Chase & Evn"; //You can only display 16 digits on the top LCD
-char bottomHalfLCD[] = "Bottom Half Cool"; //Same with the bottom.
-
+char whichButtonIsPressed[] = {'n', 'o', 't', 'h', 'i', 'n', 'g', 'I', 's', 'H', 'e', 'r', 'e', 'Y', 'e', 't'}; 
 
 // declare objects
 IRrecv irrecv(receiver); //Creat an instance of 'irrecv'
@@ -26,7 +24,15 @@ void translateIR() {
   switch(results.value) {
     case 0xFFA25D:
       Serial.println("POWER");
-      digitalWrite(8,LOW);
+      digitalWrite(8,LOW); //Puts the string "POWER" into the whichButtonIsPressed array.
+      whichButtonIsPressed[0] = 'P';
+      whichButtonIsPressed[1] = 'O';
+      whichButtonIsPressed[2] = 'W';
+      whichButtonIsPressed[3] = 'E';
+      whichButtonIsPressed[4] = 'R';
+      for (int i = 5; i<16; i++){
+        whichButtonIsPressed[i] = ' ';
+      }
       break;
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
@@ -75,6 +81,9 @@ void translateIR() {
 
 //Prints the string
 void stringPrint() {
+  char topHalfLCD[] = "Mike Chase & Evn"; //You can only display 16 digits on the top LCD
+  char bottomHalfLCD[] = "Bottom Half Cool"; //Same with the bottom.
+  bottomHalfLCD[16] = whichButtonIsPressed[16]; //The bottom half of the display should display which button is pressed. (Currently only with power).
   lcd.print(topHalfLCD);
   lcd.setCursor(0,1);
   lcd.print(bottomHalfLCD);
