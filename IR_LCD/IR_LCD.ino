@@ -33,6 +33,7 @@ void translateIR() {
       for (int i = 5; i<16; i++){
         whichButtonIsPressed[i] = ' ';
       }
+        stringPrint();
       break;
     case 0xFFE21D: Serial.println("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); break;
@@ -81,12 +82,15 @@ void translateIR() {
 
 //Prints the string
 void stringPrint() {
+  /*
   char topHalfLCD[] = "Mike Chase & Evn"; //You can only display 16 digits on the top LCD
   char bottomHalfLCD[] = "Bottom Half Cool"; //Same with the bottom.
   bottomHalfLCD[16] = whichButtonIsPressed[16]; //The bottom half of the display should display which button is pressed. (Currently only with power).
   lcd.print(topHalfLCD);
+  */
   lcd.setCursor(0,1);
-  lcd.print(bottomHalfLCD);
+  //lcd.print(bottomHalfLCD);
+  lcd.print(whichButtonIsPressed);
 }
 void setup() {
   // put your setup code here, to run once:
