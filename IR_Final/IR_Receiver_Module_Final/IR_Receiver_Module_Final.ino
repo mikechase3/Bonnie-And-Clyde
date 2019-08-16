@@ -22,7 +22,7 @@ void translateIR() {
     case 0xFFA25D:
       Serial.println("POWER");
       lcd.clear();
-      lcd.print("POWER");
+      //lcd.print("POWER");
       digitalWrite(8,LOW);
       isPreset = false;
       time_left = 0;
@@ -36,21 +36,20 @@ void translateIR() {
       if (!isPreset) {
         Serial.println("PAUSE/PLAY");
         lcd.clear();
-        lcd.print("PAUSE/PLAY");
+        //lcd.print("PAUSE/PLAY");
         if (play_pause == 0) {
           play_pause = 1;
           digitalWrite(8,HIGH);
-          refresh();
         }
         else if (play_pause == 1) {
           play_pause = 0;
           digitalWrite(8,LOW);
-          refresh();
         }
       }
       else {
         Serial.println("PRESET ON - PRESS POWER");
       }
+      refresh();
       break;
     case 0xFFC23D: Serial.println("FAST FORWARD"); lcd.clear(); lcd.print("FAST FORWARD"); break;
     case 0xFFE01F: Serial.println("DOWN"); lcd.clear(); lcd.print("DOWN"); break;
