@@ -27,6 +27,7 @@ void translateIR() {
       isPreset = false;
       time_left = 0;
       play_pause = 0;
+      refresh();
       break;
     case 0xFFE21D: Serial.println("FUNC/STOP"); lcd.clear(); lcd.print("FUNC/STOP"); break;
     case 0xFF629D: Serial.println("VOL+"); lcd.clear(); lcd.print("VOL+"); break;
@@ -39,10 +40,12 @@ void translateIR() {
         if (play_pause == 0) {
           play_pause = 1;
           digitalWrite(8,HIGH);
+          refresh();
         }
         else if (play_pause == 1) {
           play_pause = 0;
           digitalWrite(8,LOW);
+          refresh();
         }
       }
       else {
@@ -154,11 +157,11 @@ void refresh() {
   lcd.setCursor(0,0);
   lcd.print("Door is ");
   lcd.setCursor(8,0);
-  if (!isPreset || play_pause == 1) {
-    lcd.print("LOCKED");
+  if (isPreset || play_pause == 1) {
+    lcd.print("UNLOCKED");
   }
   else {
-    lcd.print("UNLOCKED");
+    lcd.print("LOCKED");
   }
 
   // second line
@@ -182,7 +185,7 @@ void setup() {
   // lcd setup
   lcd.begin(16,2); //Initializes the baord as 2 rows 16 across.
   lcd.setCursor(0,0);
-  lcd.print("Welcome to")
+  lcd.print("Welcome to");
   lcd.setCursor(0,1);
   lcd.print("Bonnie & Clyde");
   delay(3000);
@@ -200,12 +203,13 @@ void loop() {
     if (time_left == 0.0) {
       digitalWrite(8,LOW);
       isPreset = false;
+      refresh();
     }
     else {
       time_left = time_left - 0.5;
       Serial.println(time_left);
       delay(500);
+      refresh();
     }
   }
-  refresh();
 }
