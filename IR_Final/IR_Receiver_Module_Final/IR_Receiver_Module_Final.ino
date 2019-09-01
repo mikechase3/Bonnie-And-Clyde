@@ -22,7 +22,6 @@ void translateIR() {
     case 0xFFA25D:
       Serial.println("POWER");
       lcd.clear();
-      //lcd.print("POWER");
       digitalWrite(8,LOW);
       isPreset = false;
       time_left = 0;
@@ -38,6 +37,8 @@ void translateIR() {
         lcd.clear();
         //lcd.print("PAUSE/PLAY");
         if (play_pause == 0) {
+          // Keep the display on
+          digitalWrite(13,HIGH);
           play_pause = 1;
           digitalWrite(8,HIGH);
         }
@@ -60,80 +61,98 @@ void translateIR() {
     // Start Numbers and Digits
     case 0xFF6897: Serial.println("0"); lcd.clear(); lcd.print("0"); break;
     case 0xFF30CF:
-      Serial.println("1 - 10 seconds");
+      Serial.println("2 - 30 seconds");
       lcd.clear();
-      lcd.print("10 SECONDS");
+      // Keep the display on
+      digitalWrite(13,HIGH);
+      lcd.print("30 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
       play_pause = 0;
-      time_left = 10;
+      time_left = 30;
       break;
     case 0xFF18E7:
-      Serial.println("2 - 60 seconds - 1 minute");
-      lcd.clear();
-      lcd.print("60 SECONDS");
-      digitalWrite(8,HIGH);
-      isPreset = true;
-      play_pause = 0;
-      time_left = 60;
-      break;
-    case 0xFF7A85:
-      Serial.println("3 - 120 seconds - 2 minutes");
-      lcd.clear();
-      lcd.print("120 SECONDS");
-      digitalWrite(8,HIGH);
-      isPreset = true;
-      play_pause = 0;
-      time_left = 120;
-      break;
-    case 0xFF10EF:
-      Serial.println("4 - 300 seconds - 5 minutes");
-      lcd.clear();
-      lcd.print("300 SECONDS");
-      digitalWrite(8,HIGH);
-      isPreset = true;
-      play_pause = 0;
-      time_left = 300;
-      break;
-    case 0xFF38C7:
       Serial.println("5 - 900 seconds - 15 minutes");
       lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
       lcd.print("900 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
       play_pause = 0;
       time_left = 900;
       break;
-    case 0xFF5AA5:
-      Serial.println("6 - 1800 seconds - 30 minutes");
+    case 0xFF7A85:
+      Serial.println("3 - 1800 seconds - 30 minutes");
       lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
       lcd.print("1800 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
       play_pause = 0;
       time_left = 1800;
       break;
-    case 0xFF42BD:
-      Serial.println("7 - 3600 seconds - 60 minutes - 1 hour");
+    case 0xFF10EF:
+      Serial.println("4 - 2700 seconds - 45 minutes");
       lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
+      lcd.print("2700 SECONDS");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 2700;
+      break;
+    case 0xFF38C7:
+      Serial.println("1 - 3600 seconds - 60 minutes - 1 hour");
+      lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
       lcd.print("3600 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
       play_pause = 0;
       time_left = 3600;
       break;
-    case 0xFF4AB5:
-      Serial.println("8 - 7200 seconds - 120 minutes - 2 hours");
+    case 0xFF5AA5:
+      Serial.println("6 - 7200 seconds - 120 minutes - 2 hours");
       lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
       lcd.print("7200 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
       play_pause = 0;
       time_left = 7200;
       break;
+    case 0xFF42BD:
+      Serial.println("7 - 10800 seconds - 180 minutes - 3 hours");
+      lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
+      lcd.print("10800 SECONDS");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 10800;
+      break;
+    case 0xFF4AB5:
+      Serial.println("8 - 21600 seconds - 360 minutes - 6 hours");
+      lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
+      lcd.print("21600 SECONDS");
+      digitalWrite(8,HIGH);
+      isPreset = true;
+      play_pause = 0;
+      time_left = 21600;
+      break;
     case 0xFF52AD:
       Serial.println("9 - 86400 seconds - 720 minutes - 12 hours");
       lcd.clear();
+      // Keep the display on
+      digitalWrite(13,HIGH);
       lcd.print("86400 SECONDS");
       digitalWrite(8,HIGH);
       isPreset = true;
@@ -161,6 +180,8 @@ void refresh() {
   }
   else {
     lcd.print("LOCKED");
+    // keep the display off
+    digitalWrite(13,LOW);
   }
 
   // second line
@@ -172,14 +193,50 @@ void refresh() {
   }
 }
 
+void pausePlay() {
+  // works the same way with hitting the Pause/Play
+  // on the IR Remote. It will either open or close
+  // the door based off of its last setting
+  if (digitalRead(9) == HIGH) {
+    if (!isPreset) {
+      Serial.println("PAUSE/PLAY");
+      lcd.clear();
+      //lcd.print("PAUSE/PLAY");
+      if (play_pause == 0) {
+        // Keep the display on
+        digitalWrite(13,HIGH);
+        play_pause = 1;
+        digitalWrite(8,HIGH);
+      }
+      else if (play_pause == 1) {
+        play_pause = 0;
+        digitalWrite(8,LOW);
+      }
+    }
+    else {
+      Serial.println("POWER");
+      lcd.clear();
+      digitalWrite(8,LOW);
+      isPreset = false;
+      time_left = 0;
+      play_pause = 0;
+    }
+    refresh();
+    delay(1000);
+  }
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   Serial.println("IR Receiver Button Decode");
   irrecv.enableIRIn(); //Start the receiver.
   pinMode(8,OUTPUT);
+  pinMode(9,INPUT);
   pinMode(10,OUTPUT);
+  pinMode(13,OUTPUT);
   digitalWrite(10,HIGH);
+  digitalWrite(13,HIGH);  // display on
 
   // lcd setup
   lcd.begin(16,2); //Initializes the baord as 2 rows 16 across.
@@ -193,11 +250,15 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (irrecv.decode(&results)) //Have we received an IR signal?
+  if (irrecv.decode(&results)) // Have we received an IR signal?
   {
     translateIR();
     irrecv.resume(); //Receive the next value
   }
+  
+  // if no signal read button
+  pausePlay();
+  
   if (isPreset) {
     if (time_left == 0.0) {
       digitalWrite(8,LOW);
