@@ -194,36 +194,47 @@ void refresh() {
 }
 
 void pausePlay() {
-//   works the same way with hitting the Pause/Play
-//   on the IR Remote. It will either open or close
-//   the door based off of its last setting
-  if (digitalRead(9) == HIGH) {
-    if (!isPreset) {
-      Serial.println("PAUSE/PLAY");
+  // works the same way with hitting the Pause/Play
+  // on the IR Remote. It will either open or close
+  // the door based off of its last setting
+//  if (digitalRead(9) == HIGH) {
+//    if (!isPreset) {
+//      Serial.println("PAUSE/PLAY");
+//      lcd.clear();
+//      //lcd.print("PAUSE/PLAY");
+//      if (play_pause == 0) {
+//        // Keep the display on
+//        digitalWrite(13,HIGH);
+//        play_pause = 1;
+//        digitalWrite(8,HIGH);
+//      }
+//      else if (play_pause == 1) {
+//        play_pause = 0;
+//        digitalWrite(8,LOW);
+//      }
+//    }
+//    else {
+//      Serial.println("POWER");
+//      lcd.clear();
+//      digitalWrite(8,LOW);
+//      isPreset = false;
+//      time_left = 0;
+//      play_pause = 0;
+//    }
+//    refresh();
+//    delay(1000);
+//  }
+      //Runs the loop for only an hour
+      Serial.println("1 - 3600 seconds - 60 minutes - 1 hour");
       lcd.clear();
-      //lcd.print("PAUSE/PLAY");
-      if (play_pause == 0) {
-        // Keep the display on
-        digitalWrite(13,HIGH);
-        play_pause = 1;
-        digitalWrite(8,HIGH);
-      }
-      else if (play_pause == 1) {
-        play_pause = 0;
-        digitalWrite(8,LOW);
-      }
-    }
-    else {
-      Serial.println("POWER");
-      lcd.clear();
-      digitalWrite(8,LOW);
-      isPreset = false;
-      time_left = 0;
+      // Keep the display on
+      digitalWrite(13,HIGH);
+      lcd.print("3600 SECONDS");
+      digitalWrite(8,HIGH);
+      isPreset = true;
       play_pause = 0;
-    }
-    refresh();
-    delay(1000);
-  }
+      time_left = 3600;
+
 }
 
 void setup() {
