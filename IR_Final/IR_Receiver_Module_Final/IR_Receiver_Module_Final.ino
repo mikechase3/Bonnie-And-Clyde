@@ -39,8 +39,10 @@ void translateIR() {
         if (play_pause == 0) {
           // Keep the display on
           digitalWrite(13,HIGH);
-          play_pause = 1;
+          lcd.print("30 SECONDS");
           digitalWrite(8,HIGH);
+          play_pause = 1;
+      	  time_left = 30;
         }
         else if (play_pause == 1) {
           play_pause = 0;
@@ -205,8 +207,10 @@ void pausePlay() {
       if (play_pause == 0) {
         // Keep the display on
         digitalWrite(13,HIGH);
-        play_pause = 1;
+        lcd.print("30 SECONDS");
         digitalWrite(8,HIGH);
+        play_pause = 1;
+      	time_left = 30;
       }
       else if (play_pause == 1) {
         play_pause = 0;
@@ -259,10 +263,11 @@ void loop() {
   // if no signal read button
   pausePlay();
   
-  if (isPreset) {
+  if (isPreset || play_pause == 1) {
     if (time_left == 0.0) {
       digitalWrite(8,LOW);
       isPreset = false;
+      play_pause = 0;
       refresh();
     }
     else {
